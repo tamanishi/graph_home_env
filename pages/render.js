@@ -17,10 +17,13 @@ request
       title: {
         text: "temperature"
       },
+      axisY: {
+        includeZero: false
+      },
       data: [{
         type: 'line',
         color: 'blue',
-        dataPoints: temperatureData 
+        dataPoints: temperatureData
       }]
     });
     temperatureChart.render();
@@ -37,10 +40,13 @@ request
       title: {
         text: "humidity"
       },
+      axisY: {
+        includeZero: false
+      },
       data: [{
         type: 'line',
         color: 'red',
-        dataPoints: humidityData 
+        dataPoints: humidityData
       }]
     });
     humidityChart.render();
@@ -63,7 +69,7 @@ request
       data: [{
         type: 'line',
         color: 'green',
-        dataPoints: pressureData 
+        dataPoints: pressureData
       }]
     });
     pressureChart.render();
