@@ -77,6 +77,8 @@ function render() {
     });
 }
 
+render();
+
 setTimeout(function() {
   render();
 }, 15 * 60 * 1000);
