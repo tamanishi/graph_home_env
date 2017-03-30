@@ -79,6 +79,6 @@ function render() {
 
 render();
 
-setTimeout(function() {
+setInterval(function() {
   render();
 }, 15 * 60 * 1000);
