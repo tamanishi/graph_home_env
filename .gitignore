@@ -1,5 +1,6 @@
 /gs_credentials.json
 /.env
+/newrelic.js
 
 ### https://raw.github.com/github/gitignore/a105d25dcf35cc565e0ef572a6e4eec3c29c955b/Node.gitignore
 
