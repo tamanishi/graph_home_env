@@ -12,7 +12,6 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "google-spreadsheet": "^2.0.3",
-    "newrelic": "^1.38.1"
+    "google-spreadsheet": "^2.0.3"
   }
 }
