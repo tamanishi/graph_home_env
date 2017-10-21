@@ -3,82 +3,182 @@ var request = window.superagent;
 function render() {
   request
     .get('/lastday')
-    .end( (err, res) => {
-      // console.log(res.text);
+    .end((err, res) => {
       let rawData = JSON.parse(res.text);
-      var temperatureData = rawData.map( (e, i, a) => {
-        let point = {
-          x: new Date(e.timestamp),
-          y: Number(e.temperature)
-        };
-        return point;
+      // console.log(rawData[0].timestamp);
+      let startDateTime = Date.parse(rawData[0].timestamp);
+      var temperatureData = rawData.map((e, i, a) => {
+        return Number(e.temperature);
       });
-      // console.log(JSON.stringify(temperatureData));
-      var temperatureChart = new CanvasJS.Chart('temperature', {
-        title: {
-          text: "temperature"
-        },
-        axisY: {
-          includeZero: false
-        },
-        data: [{
-          type: 'line',
-          color: 'blue',
-          dataPoints: temperatureData
-        }]
-      });
-      temperatureChart.render();
 
-      var humidityData = rawData.map( (e, i, a) => {
-        let point = {
-          x: new Date(e.timestamp),
-          y: Number(e.humidity)
-        };
-        return point;
+      var humidityData = rawData.map((e, i, a) => {
+        return Number(e.humidity);
       });
-      // console.log(JSON.stringify(humidityData));
-      var humidityChart = new CanvasJS.Chart('humidity', {
-        title: {
-          text: "humidity"
-        },
-        axisY: {
-          includeZero: false
-        },
-        data: [{
-          type: 'line',
-          color: 'red',
-          dataPoints: humidityData
-        }]
-      });
-      humidityChart.render();
 
-      var pressureData = rawData.map( (e, i, a) => {
-        let point = {
-          x: new Date(e.timestamp),
-          y: Number(e.pressure)
-        };
-        return point;
+      var pressureData = rawData.map((e, i, a) => {
+        return Number(e.pressure);
       });
-      // console.log(JSON.stringify(pressureData));
-      var pressureChart = new CanvasJS.Chart('pressure', {
+
+      // console.log(temperatureData);
+      // console.log(humidityData);
+      // console.log(pressureData);
+
+      Highcharts.setOptions({
+        global: {
+          useUTC: false
+        }
+      });
+
+      Highcharts.chart('container', {
+
         title: {
-          text: "pressure"
+          text: 'home environment (last 24 hours)'
         },
-        axisY: {
-          includeZero: false
+
+        // subtitle: {
+        //   text: 'Source: thesolarfoundation.com'
+        // },
+
+        xAxis: {
+          type: 'datetime',
+          dateTimeLabelFormats: {
+            minute: '%H:%M',
+            // hour: '%m/%d %H:%M',
+            hour: '%H:%M',
+            day: '%Y/%m/%d',
+            week: '%Y/%m/%d',
+            month: '%Y/%m',
+            year: '(%Y)'
+          }
         },
-        data: [{
-          type: 'line',
-          color: 'green',
-          dataPoints: pressureData
-        }]
+
+        yAxis: [
+          {
+            // className: "highcharts-color-0",
+            title: {
+              text: "temperature",
+              style: {
+                color: "#f18c16"
+              }
+            },
+            labels: {
+              format: "{value}℃",
+              style: {
+                color: "#f18c16"
+              }
+            },
+            ceiling: 35,
+            floor: 0,
+          },
+          {
+            gridLineWidth: 0,
+            title: {
+              text: 'humidity',
+              style: {
+                color: "#7cb5ec"
+              }
+            },
+            labels: {
+              format: "{value} %",
+              style: {
+                color: "#7cb5ec"
+              }
+            },
+            ceiling: 80,
+            floor: 30,
+            opposite: true
+          },
+          {
+            gridLineWidth: 0,
+            title: {
+              text: 'pressure',
+              style: {
+                color: "#90ed7d"
+              }
+            },
+            labels: {
+              format: "{value} hPa",
+              style: {
+                color: "#90ed7d"
+              }
+            },
+            ceiling: 1300,
+            floor: 800,
+            opposite: true
+          }
+        ],
+
+        legend: {
+          layout: 'vertical',
+          align: 'left',
+          verticalAlign: 'top',
+          floating: true,
+          x: 80,
+          y: 40
+        },
+
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: false
+            }
+            //   label: {
+            //     connectorAllowed: false
+            //   }
+          }
+        },
+
+        series: [
+          {
+            name: 'temperature',
+            data: temperatureData,
+            type: 'spline',
+            color: '#f18c16',
+            pointStart: startDateTime,
+            pointInterval: 60 * 15 * 1000,
+            yAxis: 0
+          },
+          {
+            name: 'humidity',
+            data: humidityData,
+            type: 'spline',
+            color: '#7cb5ec',
+            pointStart: startDateTime,
+            pointInterval: 60 * 15 * 1000,
+            yAxis: 1
+          },
+          {
+            name: 'pressure',
+            data: pressureData,
+            type: 'spline',
+            color: '#90ed7d',
+            pointStart: startDateTime,
+            pointInterval: 60 * 15 * 1000,
+            yAxis: 2
+          }
+        ],
+
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+              }
+            }
+          }]
+        }
+
       });
-      pressureChart.render();
     });
 }
 
 render();
 
-setInterval(function() {
+setInterval(function () {
   render();
 }, 15 * 60 * 1000);
