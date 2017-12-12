@@ -85,7 +85,7 @@ function render() {
               }
             },
             ceiling: 80,
-            floor: 30,
+            floor: 20,
             opposite: true
           },
           {
